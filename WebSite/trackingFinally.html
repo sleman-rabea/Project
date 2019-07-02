@@ -1,0 +1,374 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Shipments</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Serif" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/form2.css" media="all">
+    <script type="text/javascript" src="js/form2.js"></script>
+    <style>
+        label.description {
+            font-size: 268%;
+            font-weight: bold;
+            text-align: left;
+            line-height: 125%;
+            font-family: 'Noto Serif', serif;
+            text-align: center;
+        }
+
+        #li_2 {
+            text-align: center;
+        }
+
+        #txtId {
+            margin-top: 3%;
+        }
+
+        .buttons {
+            text-align: center;
+        }
+
+        #searchByShiptId {
+            font-weight: bold;
+        }
+
+        h3 {
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body id="main_body">
+    <!--nav-->
+    <nav class="navbar navbar-inverse" style="margin-bottom: 0;border-radius: 0;">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="graduation.html"><span style="color:#dd6215 ">T</span>racking system</a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="active"><a href="graduation.html"><span style="color:#dd6215 ">HOME</span></a></li>
+                <li><a href="form.html">REGISTER</a></li>
+                <li><a href="track%20(2).html">LOGIN</a></li>
+                <li><a href="#">SERVICES</a></li>
+                <li><a href="#lastsection">CONTACT</a></li>
+            </ul>
+        </div>
+    </nav>
+    <img id="top" src="images/top1.png" alt="" style="width:90%">
+    <div id="form_container" style="width:90%">
+
+        <h1><a>Shipment</a></h1>
+
+        <form id="form_52247" class="appnitro" method="post" action="">
+
+            <ul>
+                <li id="li_2">
+                    <label class="description" for="element_2">Enter Shipment ID </label>
+                    <div>
+                        <input id="txtId" name="element_2" class="element text medium" type="text" maxlength="255"
+                            value="" />
+                    </div>
+                </li>
+
+                <br>
+
+                <li class="buttons">
+                    <input type="hidden" name="form_id" value="52247" />
+                    <button id="searchByShiptId" class="button_text btn btn-warning" type="button" name="submit">Search
+                        by Shipment Id</button>
+                    <br>
+
+                    <br>
+
+                    <a id="seeTransactionsHistory" class="button_text btn btn-warning" href="TransactionsHistory.html"
+                        target="_blank">Transaction History</a>
+
+                    <a id="ViewTempratureChart" class="button_text btn btn-warning" href="ViewChartFinally.html"
+                        target="_blank">View Temprature Chart</a>
+
+                    <!--<button id="seeTransactionsHistory" class="button_text btn btn-warning" style="cursor: pointer">
+                        <a href="TransactionsHistory.html" target="_blank">See Transactions History</a>
+                    </button> -->
+                </li>
+
+
+                <!-- To view the shipment details.  Value = data
+            <div id="myShipment"></div>
+            -->
+                <!-- View data through a table -->
+                <h3 id="TableHeadShipm" style="margin-left: 3%"></h3>
+                <table class="w3-table-all">
+                    <tbody id="shipmentTableBody"></tbody>
+                </table>
+
+                <!-- To view the Contarct details.
+            <h3>Contract details: </h3>
+            <div id="myContract"></div>
+            -->
+                <!-- View data through a table -->
+                <h3 id="TableHeadContract" style="margin-left: 3%"></h3>
+                <table class="w3-table-all">
+                    <tbody id="contractTable"></tbody>
+                </table>
+
+
+                <!-- View Temprature Data through a table-->
+                <h3 id="TableHeadTemp" style="margin-left: 3%"></h3>
+                <table class="w3-table-all">
+                    <tbody id="tempTableBody"></tbody>
+                </table>
+
+                <!-- View Acceleration Data through a table-->
+                <h3 id="TableHeadAccel" style="margin-left: 3%"></h3>
+                <table class="w3-table-all">
+                    <tbody id="accelTableBody"></tbody>
+                </table>
+                <!-- View Acceleration Data through a table-->
+                <h3 id="TableHeadGps" style="margin-left: 3%"></h3>
+                <table class="w3-table-all">
+                    <tbody id="gpsTableBody"></tbody>
+                </table>
+            </ul>
+        </form>
+        <table class="w3-table-all">
+            <tbody id="tbody"></tbody>
+        </table>
+    </div>
+    <img id="bottom" src="images/bottom1.png" alt="" style="width:90%">
+
+
+    <!--
+    Reading "JSON" data (Shipment, Contract) Using Shipment ID, and fetched Contract ID,
+    from the Hyperledger composer REST API,
+-->
+    <script>
+        $('#seeTransactionsHistory').hide();
+        $('#ViewTempratureChart').hide();
+        $(document).ready(function () {
+
+            $('#searchByShiptId').click(function () {
+                var i = 0;
+
+                // ID input to search
+                var requestData = document.getElementById("txtId").value;
+
+                // Store The Id that entered by the user.
+                sessionStorage.setItem("shipmentIdValue", requestData);
+
+                var getJSON = function (url, callback) {
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('get', url, true);
+                    xhr.responseType = 'json';
+                    xhr.onload = function () {
+                        var status = xhr.status;
+                        if (status == 200) {
+                            callback(null, xhr.response);
+                        } else {
+                            callback(status);
+                        }
+                    };
+                    xhr.send();
+                };
+                if (requestData === '') {
+                    alert("Please enter the shipment ID");
+
+                } else {
+                    setInterval(function () {
+
+                        getJSON('http://34.83.2.150:3000/api/Shipment/' + requestData,
+                            function (err, data) {
+                                if (err != null) {
+                                    alert('Something went wrong: ' + err);
+                                } else {
+
+
+                                    document.getElementById("TableHeadGps").innerHTML = "GPS reading :";
+                                    document.getElementById("TableHeadTemp").innerHTML = "Temperature reading :";
+                                    document.getElementById("TableHeadAccel").innerHTML = "Acceleration reading :";
+                                    document.getElementById("TableHeadContract").innerHTML = "Contract details :";
+                                    document.getElementById("TableHeadShipm").innerHTML = "Shipment Details :";
+
+                                    // Retrieving Contract ID to get contract data
+                                    var contract_id = data["contract"].split('#')[1];
+
+
+                                    shipmentTableBody.innerHTML = "";
+                                    var shipment = data;
+                                    delete shipment["$class"];
+                                    // iterting on the shipment data: @data
+                                    for (var key in shipment) {
+
+                                        var tr = "<tr>";
+
+                                        var value = shipment[key];
+
+                                        // Formatting emails.
+                                        if (/#/.test(value)) {
+                                            value = value.split('#')[1];
+                                        }
+
+                                        tr += "<td>" + key + "</td>" + "<td>" + value + "</td></tr>";
+                                        shipmentTableBody.innerHTML += tr;
+
+                                        if (key === "contract") {
+                                            break;
+                                        }
+                                    }
+
+
+                                    // Retrieve Contract Data.
+                                    $.getJSON('http://34.83.2.150:3000/api/Contract/' +
+                                        contract_id,
+                                        function (data) {
+
+                                            // Represent ConTract Data.
+                                            var contractTableBody = document
+                                                .getElementById("contractTable");
+
+                                            delete data["$class"];
+                                            contractTableBody.innerHTML = "";
+                                            for (var key in data) {
+                                                var tr = "<tr>";
+
+                                                var value = data[key];
+
+                                                // Formatting Emails
+                                                if (/@/.test(value)) {
+                                                    value = value.split('#')[1];
+                                                }
+
+                                                tr += "<td>" + key + "</td>" + "<td>" + value + "</td></tr>";
+                                                contractTableBody.innerHTML += tr;
+
+                                            }
+                                        });
+
+
+                                    // Check if the Object is empty or not.
+                                    // @obj Parameter will be any data sent by the api (Shipment, Contract, and readings)
+                                    function isEmptyObject(obj) {
+                                        for (var key in obj) {
+                                            return false;
+                                        }
+                                        return true;
+                                    }
+
+                                    // Variables needed for Acceleration.
+                                    var accelData = data["AccelReadings"][i];
+
+                                    // Variables needed for Gps Reading.
+                                    var gpsData = data["gpsReadings"][i];
+
+
+                                    // Variables needed for Temp Reading.
+                                    var tempData = data["temperatureReadings"][i];
+
+                                    /*
+                                        IF data is not found in any reading. THE Counter stops, but the interval keeps running,
+                                        The counter will be updated only if a new data is added. 
+                                    */
+                                    if (isEmptyObject(accelData) || isEmptyObject(gpsData) || isEmptyObject(tempData)) {
+                                        console.log("DATASOURCE IS EMPTY!");
+                                        // Stopping here,
+                                        return;
+                                    } else {
+                                        // Continue counting. 
+                                        i++;
+                                    }
+
+                                    /********* GPS Reading *************/
+                                    if (isEmptyObject(gpsData)) {
+                                        console.log("no data found");
+                                    } else {
+                                        // Empty the table of the Gps reading.
+                                        gpsTableBody.innerHTML = "";
+
+                                        // Iterating on the GPS data.
+                                        for (var key in gpsData) {
+                                            var tr = "<tr>";
+                                            if (!(key === "contract" ||
+                                                key === "$class" ||
+                                                key === "shipment" ||
+                                                key === "transactionId"
+                                            )) {
+
+                                                tr += "<td>" + key + "</td>" + "<td>" +
+                                                    gpsData[key] + "</td></tr>";
+                                            }
+
+
+                                            /* We add the table row to the table body */
+                                            gpsTableBody.innerHTML += tr;
+                                        }
+                                    }
+
+
+                                    /********* Temprature *************/
+                                    if (isEmptyObject(tempData)) {
+                                        console.log("no data found");
+                                    } else {
+                                        // Removing old data in the Table.
+                                        tempTableBody.innerHTML = "";
+
+                                        for (var key in tempData) {
+                                            var tr = "<tr>";
+                                            if (key === "celsius" || key === "timestamp") {
+                                                tr += "<td>" + key + "</td>" + "<td>" +
+                                                    tempData[key] + "</td></tr>";
+                                            }
+                                            /* We add the table row to the table body */
+                                            tempTableBody.innerHTML += tr;
+                                        }
+
+
+                                        /********* Acceleration *************/
+                                        // Iterating over each reading
+                                        if (isEmptyObject(accelData)) {
+                                            console.log("no data found");
+                                        } else {
+                                            // Removing old data in the Table.
+                                            accelTableBody.innerHTML = "";
+
+                                            for (var key in accelData) {
+                                                var tr = "<tr>";
+                                                if (!(key === "contract" ||
+                                                    key === "$class" ||
+                                                    key === "shipment" ||
+                                                    key === "transactionId"
+                                                )) {
+
+                                                    tr += "<td>" + key + "</td>" + "<td>" +
+                                                        accelData[key] + "</td></tr>";
+                                                }
+                                                // Update the table with the new rows
+                                                accelTableBody.innerHTML += tr;
+
+                                            }
+                                        }
+                                    }
+
+                                    // Show transaction history button
+                                    // after at least one set of data is retrieved.
+                                    $('#seeTransactionsHistory').show();
+
+                                    // Show View Tem chart  button 
+                                    $('#ViewTempratureChart').show();
+                                }
+                                console.log(i);
+                            });
+                    }, 4 * 1000);
+                }
+            });
+
+        });
+    </script>
+
+</body>
+
+</html>

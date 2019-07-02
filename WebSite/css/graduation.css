@@ -1,0 +1,280 @@
+body{
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    font-family: 'Noto Serif', serif;
+}
+.bg-image{
+    height: 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+/*buttons*/
+.buttonsss{
+    height: 50%;
+}
+.buttonsss button{
+    background-color: #f5833be3;
+    display: inline;
+    float: left;
+    width: 21%;
+    height: 38%;
+    margin-left: 19%;
+    margin-top: 19%;
+    font-size: 2vw;
+    word-wrap: break-word;
+    color: white;
+    border-radius: 20%;
+    box-shadow: 0px 0px 17px 8px #f5833be3 ;
+    font-weight: bold;
+    border-color: #f5833b;
+}
+.buttonsss a{
+    text-decoration: none;
+    color: white;
+    letter-spacing: .1em;
+}
+/*third*/
+
+.second{
+    width: 100%;
+    height: 43%;
+}
+.second p{
+    text-align: center;
+    line-height: 1.6;
+    padding-top: 4%;
+    font-size: 254%;
+    font-weight: 500;
+}
+.third{
+    height: 62%;
+}
+.font{
+    display: inline;
+    width: 24%;
+    height: 58%;
+    float: left;
+    text-align: center;
+    margin-top: 4%;
+}
+.font p{
+    font-size: 134%;
+    font-weight: 300;
+}
+.fa-truck-moving{
+    color: #ed5b0e;
+    font-size: 460%;
+    margin-bottom: 25%;
+    
+}
+.fa-cogs{
+   color: #ed5b0e;
+    font-size: 460%;
+    margin-bottom: 25%;
+}
+.fa-leaf{
+   color: #ed5b0e;
+    font-size: 460%;
+    margin-bottom: 25%;
+}
+.fa-file-signature{
+    color: #ed5b0e;
+    font-size: 460%;
+    margin-bottom: 25%;
+}
+/*third section*/
+.folder{
+    height: 100%;
+    background-color: #ebecee;
+}
+.p4{
+    height: 100%;
+    width: 49%;
+    float: left;
+    display: inline;
+    padding-left: 4%;
+}
+#totally{
+    font-size: 268%;
+    font-weight: bold;
+    text-align: left;
+    color: #1b1e21;
+    line-height: 125%;
+     margin-top: 11%;
+}
+#hr1{
+    width:20%;
+    height: 2%;
+    background-color: #ed5b0e;
+    margin-left: 0%;
+    border-radius: 50px;
+}
+#the{
+    text-align: justify;
+    color: black;
+    font-size: 111%;
+    line-height: 109%;
+    margin-top: 8%;
+}
+.img-responsive{
+    float: left;
+    display: inline;
+    margin-left: 1%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;   
+}
+/*third section*/
+.iot{
+    height: 100%;
+}
+.p5{
+    height: 100%;
+    width: 49%;
+    float: left;
+    display: inline;
+    padding-left: 4%;
+}
+#internet{
+    font-size: 268%;
+    font-weight: bold;
+    text-align: left;
+    color: #1b1e21;
+    line-height: 125%;
+    margin-top: 14%;
+}
+#thee{
+     text-align: justify;
+    color: black;
+    font-size: 111%;
+    line-height: 109%;
+    margin-top: 8%;
+}
+.p5image{
+    float: left;
+    display: inline;
+    width: 46%;
+    margin-left: 1%;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    
+}
+/*end*/
+.lastsection{
+    width: 100%;
+    height: 62%;
+}
+.end{
+    background-color: #292828;
+    display: inline;
+    float: left;
+    width: 33.33333%;
+    height: 100%;
+}
+.end h5{
+    color: #d8d3d3;
+    text-align: left;
+    font-size: 150%;
+    font-weight: bold;
+    margin: 5% 12% 9%;
+}
+.end p{
+    text-align: left;
+    margin-left: 12%;
+    color: #d8d3d3;
+    line-height: 2.6;
+    font-size: 97%;
+}
+#hr3{
+    width:58%;
+    background-color:#d8d3d3 ;
+    margin-left: 0%;
+    border-radius: 50px;
+    margin-left: 12%;
+}
+.end a{
+    text-decoration: none;
+    color: #d8d3d3;
+    font-size: 83%;
+    font-weight: 600;
+    line-height: 0.5;
+    display: inline;
+    text-align: left;
+    margin-left: 12%;
+}
+.end a:hover{
+    color: #dd6215;
+    text-decoration: none;
+}
+@media only screen and (max-width: 700px) {
+    .font{
+        height: auto;
+    }
+    .font p{
+        font-size: 107%;
+    }
+    .fa-truck-moving{
+        font-size: 436%;
+    }
+    .fa-cogs{
+        font-size: 436%;
+    }
+    .fa-leaf{
+        font-size: 436%;
+    }
+    .fa-file-signature{
+        font-size: 436%;
+    }
+    .second p{
+        font-size: 149%;
+    }
+    .third{
+        height: auto;
+        display: inline-block;
+    }
+    #totally{
+    font-size: 150%;
+    }
+    .folder{
+        height: auto;
+        overflow-y: hidden;
+    }
+    #the{
+        font-size: 56%;
+    }
+    #hr{
+        margin-top: 7px;
+        margin-bottom: 13px;
+    }
+    #internet{
+        font-size: 150%;
+    }
+    .iot{
+        height: auto;
+        overflow-y: hidden; 
+    }
+    #thee{
+        font-size: 56%
+    }
+     .end h5{
+        font-size: 123%;
+    }
+    .end p{
+        font-size: 67%;
+    }
+    .end a{
+        font-size: 48%;
+    }
+    .lastsection{
+        height: auto;
+    }
+    .bg-image{
+        height: auto;
+    }
+    .second{
+        height: auto;
+    }
+}

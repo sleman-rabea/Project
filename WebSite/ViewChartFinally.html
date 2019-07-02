@@ -1,0 +1,186 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Temperature</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Serif" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/form2.css" media="all">
+    <script type="text/javascript" src="js/form2.js"></script>
+    <script src="plotly-latest.min.js"></script>
+    <style>
+        h3 {
+            font-size: 268%;
+            font-weight: bold;
+            line-height: 125%;
+            font-family: 'Noto Serif', serif;
+            text-align: center;
+        }
+
+        #li_2 {
+            text-align: center;
+        }
+
+        #txtId {
+            margin-top: 3%;
+        }
+
+        .buttons {
+            text-align: center;
+        }
+
+        #searchByShiptId {
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body id="main_body">
+    <!--nav-->
+    <nav class="navbar navbar-inverse" style="margin-bottom: 0;border-radius: 0;">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="graduation.html"><span style="color:#dd6215 ">T</span>racking system</a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="active"><a href="graduation.html"><span style="color:#dd6215 ">HOME</span></a></li>
+                <li><a href="form.html">REGISTER</a></li>
+                <li><a href="track%20(2).html">LOGIN</a></li>
+                <li><a href="#">SERVICES</a></li>
+                <li><a href="#lastsection">CONTACT</a></li>
+            </ul>
+        </div>
+    </nav>
+    <img id="top" src="images/top1.png" alt="" style="width: 90%">
+    <div id="form_container" style="width: 90%">
+
+        <h1><a>Shipment</a></h1>
+
+        <form id="form_52247" class="appnitro" method="post" action=""></form>
+
+        <h3>Temperature changes with the shipment ID <p id="shipId"></p>
+        </h3>
+
+        <div id="chart" style="overflow-x:hidden></div>
+
+        <table class="w3-table-all">
+            <tbody id="tbody"></tbody>
+        </table>
+    </div>
+    <img id="bottom" src="images/bottom1.png" alt="" style="width:90%">
+
+
+    <!--
+        Hi
+    Reading "JSON" data (Shipment, Contract) Using Shipment ID, and fetched Contract ID,
+    from the Hyperledger composer REST API,
+-->
+    <script>
+        // Retrieve data from the session Storage, (the shipment id)
+        var shipID;
+
+
+
+        // Get the id
+        shipID = sessionStorage.getItem("shipmentIdValue");
+
+        document.getElementById("shipId").innerText = shipID;
+
+        // counter
+        var i = 0;
+
+        // to store temp data.
+        var tempData;
+
+        // to store celsius data globally
+        var celsius;
+
+        var getJSON = function (url, callback) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('get', url, true);
+            xhr.responseType = 'json';
+            xhr.onload = function () {
+                var status = xhr.status;
+                if (status == 200) {
+                    callback(null, xhr.response);
+                } else {
+                    callback(status);
+                }
+            };
+            xhr.send();
+        }
+
+
+        setInterval(function () {
+
+
+            getJSON('http://34.83.2.150:3000/api/Shipment/' + shipID,
+                function (err, data) {
+                    if (err != null) {
+                        alert('Something went wrong: ' + err);
+                    } else {
+
+                        // Check if the Object is empty or not.
+                        // @obj Parameter will be any data sent by the api (Shipment, Contract, and readings)
+                        function isEmptyObject(obj) {
+                            for (var key in obj) {
+                                return false;
+                            }
+                            return true;
+                        }
+
+                        tempData = data["temperatureReadings"][i];
+
+                        if (isEmptyObject(tempData)) {
+                            console.log("DATASOURCE IS EMPTY!");
+                            // Stopping here,
+                            return;
+                        } else {
+                            // Continue counting.
+                            i++;
+                        }
+
+                        for (var key in tempData) {
+                            if (key === "celsius") {
+                                if (celsius > 39) {
+                                    alert(celsius + " IS HIGHHHH!")
+                                }
+                                console.log(key + tempData[key]);
+                                celsius = tempData[key];
+                                function getData() {
+                                    return celsius;
+                                }
+
+                                Plotly.plot('chart', [{
+                                    y: [getData()],
+                                    type: 'line'
+                                }]);
+
+                                Plotly.extendTraces('chart', { y: [[getData()]] }, [1])
+                            }
+                        }
+                    }
+                    console.log(i);
+
+
+
+                    /*
+                    setInterval(function () {
+                        Plotly.extendTraces('chart', { y: [[getData()]] }, [0])
+                    }, 200);
+                    */
+                });
+        }, 4000);
+
+
+
+    </script>
+
+</body>
+
+</html>

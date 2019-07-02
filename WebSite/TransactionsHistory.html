@@ -1,0 +1,296 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>transactions history</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Serif" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/form2.css" media="all">
+    <script type="text/javascript" src="js/form2.js"></script>
+    <style>
+        h3 {
+            font-size: 268%;
+            font-weight: bold;
+            line-height: 125%;
+            font-family: 'Noto Serif', serif;
+            text-align: center;
+        }
+
+        #li_2 {
+            text-align: center;
+        }
+
+        #txtId {
+            margin-top: 3%;
+        }
+
+        .buttons {
+            text-align: center;
+        }
+
+        #searchByShiptId {
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body id="main_body">
+    <!--nav-->
+    <nav class="navbar navbar-inverse" style="margin-bottom: 0;border-radius: 0;">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="graduation.html"><span style="color:#dd6215 ">T</span>racking system</a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="active"><a href="graduation.html"><span style="color:#dd6215 ">HOME</span></a></li>
+                <li><a href="form.html">REGISTER</a></li>
+                <li><a href="track%20(2).html">LOGIN</a></li>
+                <li><a href="#">SERVICES</a></li>
+                <li><a href="#lastsection">CONTACT</a></li>
+            </ul>
+        </div>
+    </nav>
+    <img id="top" src="images/top1.png" alt="" style="width: 90%">
+    <div id="form_container" style="width: 90%">
+        <form id="form_52247" class="appnitro" method="post" action=""></form>
+
+        <h3>Transcations History with ID: <p id="shipId"></p></h3>
+        <!-- To view the shipment details.  Value = data
+            <div id="myShipment"></div>
+            -->
+        <!-- View data through a table -->
+        <h3 id="TableHeadShipm" style="margin-left: 3%"></h3>
+        <table class="w3-table-all">
+            <tbody id="shipmentTableBody"></tbody>
+        </table>
+
+        <!-- To view the Contarct details.
+            <h3>Contract details: </h3>
+            <div id="myContract"></div>
+            -->
+        <!-- View data through a table -->
+        <h3 id="TableHeadContract" style="margin-left: 3%"></h3>
+        <table class="w3-table-all">
+            <tbody id="contractTable"></tbody>
+        </table>
+
+
+        <!-- View Temprature Data through a table-->
+        <h3 id="TableHeadTemp" style="margin-left: 3%"></h3>
+        <table class="w3-table-all">
+            <tbody id="tempTableBody">
+                <tr id="tempKeys"></tr>
+            </tbody>
+        </table>
+
+        <!-- View Acceleration Data through a table-->
+        <h3 id="TableHeadAccel" style="margin-left: 3%"></h3>
+        <table class="w3-table-all">
+            <tbody id="accelTableBody">
+                <tr id="tableKey"></tr>
+            </tbody>
+        </table>
+        <!-- View Acceleration Data through a table-->
+        <h3 id="TableHeadGps" style="margin-left: 3%"></h3>
+        <table class="w3-table-all">
+            <tbody id="gpsTableBody">
+                <tr id="gpsKeys"></tr>
+            </tbody>
+        </table>
+        </ul>
+        </form>
+        <table class="w3-table-all">
+            <tbody id="tbody"></tbody>
+        </table>
+    </div>
+    <img id="bottom" src="images/bottom1.png" alt="" style="width:90%">
+
+
+    <!--
+        Hi
+    Reading "JSON" data (Shipment, Contract) Using Shipment ID, and fetched Contract ID,
+    from the Hyperledger composer REST API,
+-->
+    <script>
+        $(document).ready(function () {
+
+            // Retrieve data from the session Storage, (the shipment id)
+            var shipID;
+            shipID = sessionStorage.getItem("shipmentIdValue");;
+            document.getElementById("shipId").innerText = shipID;
+
+            // Global var I to help iterating on the readings. 
+            var i = 0;
+
+            //  the main function to call the urls. 
+            var getJSON = function (url, callback) {
+                var xhr = new XMLHttpRequest();
+                xhr.open('get', url, true);
+                xhr.responseType = 'json';
+                xhr.onload = function () {
+                    var status = xhr.status;
+                    if (status == 200) {
+                        callback(null, xhr.response);
+                    } else {
+                        callback(status);
+                    }
+                };
+                xhr.send();
+            };
+            setInterval(function () {
+
+                getJSON('http://34.83.2.150:3000/api/Shipment/' + shipID,
+                    function (err, data) {
+                        if (err != null) {
+                            alert('Something went wrong: ' + err);
+                        } else {
+                            document.getElementById("TableHeadGps").innerHTML =
+                                "GPS reading:";
+                            document.getElementById("TableHeadTemp").innerHTML =
+                                "Temperature reading:";
+                            document.getElementById("TableHeadAccel").innerHTML =
+                                "Acceleration reading:";
+
+
+                            // Check if the Object is empty or not.
+                            // @obj Parameter will be any data sent by the api (Shipment, Contract, and readings)
+                            function isEmptyObject(obj) {
+                                for (var key in obj) {
+                                    return false;
+                                }
+                                return true;
+                            }
+
+                            // Variables needed for Acceleration.
+                            var accelData = data["AccelReadings"][i];
+
+                            // Variables needed for Gps Reading.
+                            var gpsData = data["gpsReadings"][i];
+
+
+                            // Variables needed for Temp Reading.
+                            var tempData = data["temperatureReadings"][i];
+
+                            /*
+                                IF data is not found in any reading. THE Counter stops, but the interval keeps running,
+                                The counter will be updated only if a new data is added. 
+                            */
+                            if (isEmptyObject(accelData) || isEmptyObject(gpsData) || isEmptyObject(tempData)) {
+                                console.log("DATASOURCE IS EMPTY!");
+                                // Stopping here,
+                                return;
+                            } else {
+                                // Continue counting. 
+                                i++;
+                            }
+
+                            /********* GPS Reading *************/
+                            if (isEmptyObject(gpsData)) {
+                                console.log("GPSREADING: no data found");
+                            } else {
+
+                                var gpsKeys = "";
+                                var gpsValues = "";
+
+                                // Iterating on the GPS data.
+                                for (var key in gpsData) {
+                                    if (!(key === "contract" ||
+                                        key === "$class" ||
+                                        key === "shipment" ||
+                                        key === "transactionId"
+                                    )) {
+
+                                        // Adding the kes o the table headings:
+                                        gpsKeys += "<th>" + key + "</th>";
+                                        document.getElementById("gpsKeys")
+                                            .innerHTML = gpsKeys;
+
+                                        // Adding the kes o the table headings:
+                                        gpsValues += "<td>" + gpsData[key] +
+                                            "</td>";
+                                    }
+                                }
+                                /* We add the table row to the table body */
+                                gpsTableBody.innerHTML += gpsValues;
+                            }
+
+
+
+                            /********* Temperature *************/
+                            if (isEmptyObject(tempData)) {
+                                console.log("TEMPREADING: no data found");
+
+                            } else {
+
+                                var tempKeys = "";
+                                var tempValues = "";
+                                for (var key in tempData) {
+
+                                    if (key === "celsius" || key === "timestamp") {
+
+                                        // Adding the keys o the table headings (ONCE):
+                                        tempKeys += "<th>" + key + "</th>";
+                                        document.getElementById("tempKeys")
+                                            .innerHTML = tempKeys;
+
+                                        // Adding the values o the table headings:
+                                        tempValues += "<td>" + tempData[key] +
+                                            "</td>";
+                                    }
+                                }
+                                /* To keep showing the values. */
+                                tempTableBody.innerHTML += tempValues;
+                            }
+
+
+                            /********* Acceleration *************/
+                            // Iterating over each reading
+                            if (isEmptyObject(accelData)) {
+                                console.log("ACCELREADING: no data found");
+                            } else {
+                                var tKeys = "";
+                                var tValues = "";
+
+                                // Removing old data in the Table.
+                                // accelTableBody.innerHTML = "";
+                                for (var key in accelData) {
+                                    if (!(key === "contract" ||
+                                        key === "$class" ||
+                                        key === "shipment" ||
+                                        key === "transactionId"
+                                    )) {
+
+                                        // Adding the keys o the table headings (ONCE):
+                                        tKeys += "<th>" + key + "</th>";
+                                        document.getElementById("tableKey")
+                                            .innerHTML = tKeys;
+
+                                        // Adding the values o the table headings:
+                                        tValues += "<td>" + accelData[key] +
+                                            "</td>";
+
+                                    }
+
+                                }
+                                /* To keep showing the values. */
+                                accelTableBody.innerHTML += tValues;
+
+                            }
+
+                            /*************************END OF SHOWING DATA ******************************/
+                        }
+                        // keeping a track of the counter. 
+                        console.log(i);
+                    });
+            }, 100);
+        });
+    </script>
+
+</body>
+
+</html>
