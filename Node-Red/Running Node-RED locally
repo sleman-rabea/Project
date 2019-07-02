@@ -1,0 +1,17 @@
+To install Node-RED locally you will need a supported version of Node.js.
+
+
+Installing with npm
+To install Node-RED you can use the npm command that comes with node.js:
+
+sudo npm install -g --unsafe-perm node-red
+
+
+Running
+
+Once installed as a global module you can use the node-red command to start Node-RED in your terminal. You can use Ctrl-C or close the terminal window to stop Node-RED.
+
+node-red
+
+
+then import the flows.json in node-red
